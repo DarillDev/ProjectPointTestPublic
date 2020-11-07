@@ -19,8 +19,8 @@ type TResolusion = '1' | '5' | '15' | '30' | '60' | 'D' | 'W' | 'M';
 interface ICandleREquest {
   symbol: string;
   resolution?: TResolusion;
-  timeStampStart: number;
-  timeStampEnd: number;
+  from: number;
+  to: number;
   format?: 'json' | 'scv';
 }
 const defoultCandleREquest: Partial<ICandleREquest> = {
