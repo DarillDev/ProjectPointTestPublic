@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiKey : 'bugqc2f48v6vml4hv96g',
+  apiKey : 'sandbox_bugqc2f48v6vml4hv970',
   apiUrl: 'https://finnhub.io/api/v1',
 };
 

@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { ICompanyProfile, IStockSymbol } from '../../models';
 
@@ -65,7 +66,6 @@ export class StocksService {
 
 
 
-   // todo : Запросе почему-то не выполняется. просто пендится 1000 лет :(
   /**
    * Запрос к API. Получение данных свечей для символов форекс.
    * @param symbol символ, возвращенный в /forex/symbol (getSymbols).
@@ -83,6 +83,31 @@ export class StocksService {
       params = params.append(key, options[key]);
     });
 
-    return this.http.get(method, {params});
+    return this.http.get(method, {params}).pipe(
+      map(data => {
+        const result = [];
+        for (const key in data) {
+          if (Object.prototype.hasOwnProperty.call(data, key)) {
+            const element = data[key];
+            if (Array.isArray(element)) {
+              element.forEach((item, i) => {
+                if (result[i] === undefined) {
+                  result[i] = {};
+                }
+                result[i][key] = item;
+              });
+            }
+          }
+        }
+        return result.map(item => ({
+          date :  item.t * 1000,
+          open : item.o,
+          high : item.h,
+          low : item.l,
+          close : item.c,
+          volume : item.v,
+        }));
+      })
+    );
   }
 }
