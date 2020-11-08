@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { StocksModule } from './stocks';
+import { Observable, ObservedValueOf } from 'rxjs';
+import { IStockSymbol } from './stocks/models';
 import { StocksService } from './stocks/services/stocksService/stocks.service';
 
 @Component({
@@ -9,11 +10,12 @@ import { StocksService } from './stocks/services/stocksService/stocks.service';
 })
 export class AppComponent {
   title = 'projectPointTest';
-  constructor(private stock: StocksService) {
-    this.stock.getCandle({
-      symbol : 'APPL',
-      from : new Date().setFullYear(2019),
-      to : Date.now()
-    }).subscribe();
+  symbolList: Observable<IStockSymbol[]>;
+  constructor(private stocks: StocksService){
+    this.symbolList = this.stocks.getSymbols();
+  }
+
+  onSelectSymbol(company: IStockSymbol): void {
+    alert(company.description);
   }
 }

@@ -1,0 +1,21 @@
+<dx-data-grid 
+    class="symbolListContainer"
+    [dataSource]="dataSource | async"
+    (onSelectionChanged)="selectionChanged($event)"
+    [masterDetail]="{ enabled: false, template: 'detail' }"
+    [showBorders]="true">
+
+    <dxo-paging [pageSize]="100"></dxo-paging>
+    <dxo-selection mode="single"></dxo-selection>
+
+    <dxi-column dataField="displaySymbol" filtering="true"></dxi-column>
+    <dxi-column dataField="description"></dxi-column>
+    <dxi-column dataField="currency"></dxi-column>
+    <dxi-column dataField="type"></dxi-column>
+
+    <div *dxTemplate="let company of 'detail'">
+        <div class="employeeInfo">
+            detail
+        </div>
+    </div>
+</dx-data-grid>
