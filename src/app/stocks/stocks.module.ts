@@ -6,12 +6,13 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { SymbolListComponent } from './components/symbol-list/symbol-list.component';
 import { DxCalendarModule, DxChartModule, DxDataGridModule, DxDateBoxModule, DxRangeSelectorModule } from 'devextreme-angular';
 import { StockCandlesComponent } from './components/stock-candles/stock-candles.component';
-
+import { StockWsService } from './services/stock-ws/stock-ws.service';
 @NgModule({
   declarations: [SymbolListComponent, StockCandlesComponent],
   exports : [SymbolListComponent, StockCandlesComponent],
   providers : [
     StocksService,
+    StockWsService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

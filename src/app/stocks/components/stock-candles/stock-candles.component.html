@@ -40,7 +40,7 @@
     </dx-chart>
     <dx-range-selector
         [dataSource]="stocksPrices"
-        [(value)]="visualRange">
+        (onValueChanged)="valueChanged($event)">
         <dxo-size [height]="120"></dxo-size>
         <dxo-scale
             minorTickInterval="day"

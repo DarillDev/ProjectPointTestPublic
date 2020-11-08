@@ -1,4 +1,5 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DxChartComponent } from 'devextreme-angular';
 import { BehaviorSubject, combineLatest, Subject, Subscription } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { IStockSymbol } from '../../models';
@@ -7,10 +8,10 @@ import { StocksService } from '../../services/stocksService/stocks.service';
 @Component({
   selector: 'app-test-stock-candles',
   templateUrl: './stock-candles.component.html',
-  styleUrls: ['./stock-candles.component.scss']
+  styleUrls: ['./stock-candles.component.scss'],
 })
 export class StockCandlesComponent implements OnInit, OnDestroy {
-
+  @ViewChild(DxChartComponent, { static: false }) chart: DxChartComponent;
   @Input() stockSymbol: Subject<IStockSymbol>; // Выбранная компания
   stocksPricesSubscribtion: Subscription; // Cсылка на подписку
   stocksPrices = []; // Данные о продажах
@@ -23,6 +24,7 @@ export class StockCandlesComponent implements OnInit, OnDestroy {
 
 
   constructor(private stock: StocksService) {
+
     // Изначально, интервал устанавливается в 1 год.
     this.from = new Date();
     this.from.setFullYear(this.from.getFullYear() - 1);
@@ -58,6 +60,10 @@ export class StockCandlesComponent implements OnInit, OnDestroy {
     }
   }
 
+  valueChanged(e: any): void {
+    // debugger;
+    this.chart.instance.zoomArgument(new Date(e.value[0]), new Date(e.value[1]));
+  }
 
   /**
    * Изменение начала временного интервала

@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   apiKey : 'sandbox_bugqc2f48v6vml4hv970',
-  apiUrl: 'https://finnhub.io/api/v1',
+  apiUrl : 'https://finnhub.io/api/v1',
+  wsUrl : 'wss://ws.finnhub.io',
 };
 
 
