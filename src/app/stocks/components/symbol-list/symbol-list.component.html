@@ -2,6 +2,7 @@
     class="symbolListContainer"
     [dataSource]="dataSource | async"
     (onSelectionChanged)="selectionChanged($event)"
+    (onContentReady)="contentReady($event)"
     [masterDetail]="{ enabled: false, template: 'detail' }"
     [showBorders]="true">
 
@@ -15,7 +16,7 @@
 
     <div *dxTemplate="let company of 'detail'">
         <div class="employeeInfo">
-            detail
+            <app-test-company-profile [dataSource]="getCompanyInfo(company.data.displaySymbol)"></app-test-company-profile>
         </div>
     </div>
 </dx-data-grid>

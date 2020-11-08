@@ -12,36 +12,6 @@ import { StocksService } from './stocks/services/stocksService/stocks.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'projectPointTest';
-  symbolList: Observable<IStockSymbol[]>;
-  currentSymbol: BehaviorSubject<IStockSymbol>;
-  stockPrices: Observable<any>;
-  webScoketSub: Subscription;
-  constructor(private stocks: StocksService, private ws: StockWsService) {
-    this.symbolList = this.stocks.getSymbols();
-    this.currentSymbol = new BehaviorSubject(null);
-
-    this.currentSymbol.pipe(
-      filter(stockSymbol => !!stockSymbol && !!stockSymbol.displaySymbol),
-      switchMap((stockSymbol) => this.ws.getTradesStream(stockSymbol.displaySymbol))
-    ).subscribe( data => {
-      console.log(data);
-    });
-
-  }
-
-  ngOnInit(): void {}
-
-  onSelectSymbol(company: IStockSymbol): void {
-    this.currentSymbol.next(company);
-  }
-
-  private subscrubeOnWebSocket(symbol: string): void {
-    if (this.webScoketSub) {
-    }
-    this.webScoketSub = this.ws.getTradesStream(symbol).subscribe( data => {
-      console.log(data);
-    });
-  }
 }

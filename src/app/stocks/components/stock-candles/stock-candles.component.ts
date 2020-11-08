@@ -13,7 +13,7 @@ import { StocksService } from '../../services/stocksService/stocks.service';
 export class StockCandlesComponent implements OnInit, OnDestroy {
   @ViewChild(DxChartComponent, { static: false }) chart: DxChartComponent;
   @Input() stockSymbol: Subject<IStockSymbol>; // Выбранная компания
-  stocksPricesSubscribtion: Subscription; // Cсылка на подписку
+  private stocksPricesSubscribtion: Subscription; // Cсылка на подписку
   stocksPrices = []; // Данные о продажах
   visualRange: any = {};
 

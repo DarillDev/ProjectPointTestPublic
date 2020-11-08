@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
-import { Observable, Observer, Subscription, throwError } from 'rxjs';
+import { from, Observable, Observer, Subscription, throwError } from 'rxjs';
   // ! C ключем от песочницы веб-сокет не работал, по этому тут берем apiKey из environment.PROD
 import { environment } from 'src/environments/environment.prod';
+import { EFinnhubWsMessageType, FinnhubWsTradeMessage, TFinnhubWsMessage } from '../../models/finhub-ws-message';
+import { filter, map } from 'rxjs/operators';
+import { ITrade } from '../../models/trade';
 
 @Injectable({
   providedIn: 'root'
@@ -10,12 +13,12 @@ import { environment } from 'src/environments/environment.prod';
 export class StockWsService {
   private wsUrl = environment.wsUrl;
   private apiKey = environment.apiKey;
-  wsSubject: WebSocketSubject<any>;
+  wsSubject: WebSocketSubject<TFinnhubWsMessage>;
   ws: Observable<any>;
   messages: Observable<any>;
   sub: any;
   constructor() {
-    this.wsSubject = webSocket(`${this.wsUrl}?token=${this.apiKey}`);
+    this.wsSubject = webSocket<TFinnhubWsMessage>(`${this.wsUrl}?token=${this.apiKey}`);
 
     /**
      * ! Костыль. Магия какая-то. Если использвать getTradesStream() внутри swithMap()
@@ -23,7 +26,8 @@ export class StockWsService {
      * ! при втором значении в потоке swithMap, как и ожидалось, отписался предыдушего Observavle,
      * ! и подписался на новый. Но через пол секунды он отписывается от текущего Obsrvable.
      * * ========================================================================================================
-     * ! Короче, дело в том что сам wsSubject() закрывает соединение WebScoket, а потом убивает всех подписчиков
+     * ! Короче, дело в том что сам wsSubject() закрывает соединение WebScoket, а потом убивает
+     * ! всех подписчиков (но это не точно)
      * ! И делает он это скорей всего потому , что на какой-то момент у него не было ни одного подписчика.
      * ! Вообщем пока решение просто оставть этого подписчика :
      */
@@ -38,20 +42,18 @@ export class StockWsService {
    *  Возврашает Obsrvalbe, данные в котором будут фильтроваться для этого канала.
    * @param symbol Символ компании
    */
-  getTradesStream(symbol: string): Observable<any> {
+  getTradesStream(symbol: string): Observable<ITrade> {
     if (!this.wsSubject) {
       return throwError(new Error('websocket subject not set'));
     }
-    return this.wsSubject.multiplex(
+    const source = this.wsSubject.multiplex(
       // Sub message
       () => {
-        console.log(`subscribe ${symbol}`);
-        // * Когда сервер получит это сообщение, он начнет отправлять сообщения для
+        // * Когда сервер получит это сообщение, он начнет отправлять сообщения для подписчика
         return {type : 'subscribe', symbol};
       },
       // unSub messange
       () => {
-        console.log(`unsubscribe ${symbol}`);
         // * когда получит это, он остановится
         return {type : 'unsubscribe', symbol};
       },
@@ -59,7 +61,23 @@ export class StockWsService {
       message => {
         return message.type === 'trade' && message.data[0].s === symbol;
       }
+    ) as Observable<TFinnhubWsMessage>;
+
+    // todo : Почему в дпте массив? надо ли ? как отображать?
+    const pipe = source.pipe(
+      filter(message => message.type === EFinnhubWsMessageType.TRADE),
+      map((tradeMessage: FinnhubWsTradeMessage): ITrade => {
+        const data = tradeMessage.data[0];
+        return {
+          price : data.p,
+          symbol : data.s,
+          time : new Date(data.t * 1000),
+          volume : data.v,
+        };
+      })
     );
+
+    return pipe;
   }
 
 }

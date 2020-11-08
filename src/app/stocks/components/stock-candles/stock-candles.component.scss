@@ -1,0 +1,17 @@
+.stock-candles {
+    width: 100%;
+    padding: 1em;
+    background: #f2f2f2;
+    border-radius: .45em;
+}
+.stock-candles__range-box {
+    display: flex;
+}
+.option {
+    margin: 10px;
+    display: flex;
+    align-items: center;
+}
+.option > span {
+    margin-right: 10px;
+}

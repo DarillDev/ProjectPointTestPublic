@@ -1,0 +1,78 @@
+
+<div class="companyProfile" [ngSwitch]="dataState">
+    <div *ngSwitchCase="0">
+        <div class='sk-wave'>
+            <div class='sk-rect sk-rect-1'></div>
+            <div class='sk-rect sk-rect-2'></div>
+            <div class='sk-rect sk-rect-3'></div>
+            <div class='sk-rect sk-rect-4'></div>
+            <div class='sk-rect sk-rect-5'></div>
+        </div>
+    </div>
+    <div *ngSwitchCase="1">
+        <div class="companyProfile__title">
+            {{profile.name | uppercase}}
+        </div>
+        <div class="companyProfile__subtitle">
+            Market capitalization   {{profile.marketCapitalization | currency:'USD'}}
+        </div>
+        <div class="companyProfile__card-info">
+            <div class="profile-label">
+                <span class="profile-label__key">country</span>
+                <span class="profile-label__value">{{profile.country }}</span>
+            </div>
+            <div class="profile-label">
+                <span class="profile-label__key">currency</span>
+                <span class="profile-label__value">{{profile.currency  }}</span>
+            </div>
+            <div class="profile-label">
+                <span class="profile-label__key">exchange</span>
+                <span class="profile-label__value">{{profile.exchange }}</span>
+            </div>
+            <div class="profile-label">
+                <span class="profile-label__key">finnhubIndustry</span>
+                <span class="profile-label__value">{{profile.finnhubIndustry  }}</span>
+            </div>
+            <div class="profile-label">
+                <span class="profile-label__key">ipo </span>
+                <span class="profile-label__value">{{profile.ipo  }}</span>
+            </div>
+            <div class="profile-label">
+                <span class="profile-label__key">logo </span>
+                <span class="profile-label__value">{{profile.logo  }}</span>
+            </div>
+            <div class="profile-label">
+                <span class="profile-label__key">phone </span>
+                <span class="profile-label__value">{{profile.phone  }}</span>
+            </div>
+            <div class="profile-label">
+                <span class="profile-label__key">shareOutstanding </span>
+                <span class="profile-label__value">{{profile.shareOutstanding  }}</span>
+            </div>
+            <div class="profile-label">
+                <span class="profile-label__key">ticker </span>
+                <span class="profile-label__value">{{profile.ticker  }}</span>
+            </div>
+            <div class="profile-label">
+                <span class="profile-label__key">weburl </span>
+                <span class="profile-label__value">{{profile.weburl  }}</span>
+            </div>
+        </div>
+        <!-- <ul>
+            <li *ngFor="let prop of profile | keyvalue">
+               <span class="companyProfile__key">
+                {{prop.key}}
+               </span>
+               <span class="companyProfile__value">
+                {{prop.value}}
+               </span>
+            </li>
+        </ul> -->
+    </div>
+    <div *ngSwitchCase="2">
+        Нет данных
+    </div>
+    <div *ngSwitchCase="3">
+        Error
+    </div>   
+</div>

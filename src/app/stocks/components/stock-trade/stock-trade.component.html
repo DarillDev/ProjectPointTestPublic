@@ -1,0 +1,12 @@
+<div class="stock-trade">
+    <div class="stock-trade__title">
+        Сделки - Последние обновления цен
+        <div *ngIf="(lastTradeData$ | async) as trade; else noLastUpdateData">
+            {{trade.price}}
+        </div>
+        <ng-template #noLastUpdateData>
+            Данные о последних торгах отсутсвуют
+        </ng-template>
+    </div>
+    
+</div>
